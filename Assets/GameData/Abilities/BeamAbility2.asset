@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20f3eb1fd60c98e47ad4e4858e52b68c, type: 3}
-  m_Name: GameDataRegister
+  m_Script: {fileID: 11500000, guid: ce88f4377bce1b94fb425aafbaf3c4eb, type: 3}
+  m_Name: BeamAbility2
   m_EditorClassIdentifier: 
-  abilityInfoRegister:
-  - {fileID: 11400000, guid: 7626c9df0d177d94992c110822b868eb, type: 2}
-  - {fileID: 11400000, guid: e1fc122285cc1bd4b85c89606f9e61df, type: 2}
+  abilityID: Beam2
+  abilityButtonSprite: {fileID: 21300000, guid: b437f74c973e76b4aa518122fc40a36b,
+    type: 3}
+  manaCost: 5
+  effectDelay: 3
+  allowRotation: 1
+  abilityPrefabID: Beam

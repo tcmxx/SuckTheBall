@@ -44,6 +44,12 @@ public class CommandController : MonoBehaviourPun
             photonView.RPC("ExecuteCommand", RpcTarget.MasterClient, command);
     }
 
+    public AbilityInfo GetAbilityInfoByID(string abilityID)
+    {
+        AbilityInfo abilityInfo = null;
+        gameDataRegister.AbilityRegister.TryGetValue(abilityID, out abilityInfo);
+        return abilityInfo;
+    }
 
     [PunRPC]
     public void ExecuteCommand(AbilityCommand command)

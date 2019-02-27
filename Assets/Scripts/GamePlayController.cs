@@ -12,19 +12,27 @@ public struct PlayerInGameInfo
 
 public class GamePlayController : MonoBehaviour,IPunObservable
 {
-    public int PlayerIndex { get; }
+    public int PlayerIndex { get; private set; }
     public static GamePlayController Instance { get; protected set; }
 
     public float startDelay = 3;
-
+    public float manaRegenRate = 1f;
     public PlayerInGameInfo Player0Info { get; private set; }
     public PlayerInGameInfo Player1Info { get; private set; }
 
     public NetworkObjectPool prefabPool;
+
+    public AblityDeck Deck { get; private set; }
+
     private void Awake()
     {
         Instance = this;
         Photon.Pun.PhotonNetwork.PrefabPool = prefabPool;
+
+        Deck = new AblityDeck();
+        Deck.LoadDefaultAbilities();
+
+        PlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber;
     }
     
     // Start is called before the first frame update
@@ -37,9 +45,35 @@ public class GamePlayController : MonoBehaviour,IPunObservable
     // Update is called once per frame
     void Update()
     {
-        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            float reg = Time.deltaTime * manaRegenRate;
+            var info = Player0Info;
+            info.mana = Mathf.Min(info.mana + reg,10);
+            Player0Info = info;
+
+            info = Player1Info;
+            info.mana = Mathf.Min(info.mana + reg, 10);
+            Player1Info = info;
+        }
     }
 
+    public PlayerInGameInfo GetLocalPlayerInfo()
+    {
+        if(PlayerIndex == 0)
+        {
+            return Player0Info;
+        }
+        else
+        {
+            return Player1Info;
+        }
+    }
+
+    public bool LocalPlayerManaEnough(float manaNeeded)
+    {
+        return PlayerManaEnough(PlayerIndex, manaNeeded);
+    }
     public bool PlayerManaEnough(int playerIndex, float manaNeeded)
     {
         if (playerIndex == 0)
@@ -98,5 +132,10 @@ public class GamePlayController : MonoBehaviour,IPunObservable
             this.Player0Info = (PlayerInGameInfo)stream.ReceiveNext();
             this.Player1Info = (PlayerInGameInfo)stream.ReceiveNext();
         }
+    }
+
+    public AbilityInfo NextAbiliityInfo()
+    {
+        return CommandController.Instance.GetAbilityInfoByID(Deck.Next());
     }
 }

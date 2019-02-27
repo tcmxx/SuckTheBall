@@ -9,7 +9,7 @@ public class AbilityInfo : ScriptableObject
     public Sprite abilityButtonSprite;
     public int manaCost;
     public float effectDelay = 1;
-    
+    public bool allowRotation = true;
     public string abilityPrefabID;
 
     public AbilityCommand GenerateCommand(Vector2 position, float rotation, int playerIndex)

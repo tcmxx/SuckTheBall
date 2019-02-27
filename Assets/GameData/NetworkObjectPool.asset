@@ -15,5 +15,7 @@ MonoBehaviour:
   IDGameObjectPool:
     m_keys:
     - Beam
+    - TargetBall
     m_values:
     - {fileID: 7238551246477922370, guid: 0802914576ae7cd4490d98fd70f440a2, type: 3}
+    - {fileID: 654903986089176819, guid: b8c337bf90d15c8419e4fc34cee32341, type: 3}

@@ -21,7 +21,9 @@ public class NetworkObjectPool : ScriptableObject, IPunPrefabPool
         GameObject objPref = null;
         if(IDGameObjectPool.TryGetValue(prefabId,out objPref))
         {
-            return GameObject.Instantiate(objPref, position, rotation);
+            var result =  GameObject.Instantiate(objPref, position, rotation);
+            result.SetActive(false);
+            return result;
         }
         else
         {

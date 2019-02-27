@@ -26,7 +26,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.OfflineMode = false;
+        PhotonNetwork.OfflineMode = true;
         PhotonNetwork.AutomaticallySyncScene = true ;
     }
 
@@ -44,6 +44,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public void MatchMaking(string nickname)
     {
+        PhotonNetwork.OfflineMode = false;
         PhotonNetwork.NickName = nickname;
         // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.IsConnected)

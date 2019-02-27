@@ -16,7 +16,7 @@ public class TargetBallSpawner : MonoBehaviour
 
     public static TargetBallSpawner Instance { get; protected set; }
     [SerializeField]
-    protected GameObject targetBallPref;
+    protected string targetBallPrefID;
     [SerializeField]
     protected Transform[] spawnPositions;
     [SerializeField]
@@ -60,7 +60,7 @@ public class TargetBallSpawner : MonoBehaviour
 
     public void Spawn(Vector2 pos)
     {
-        Instantiate(targetBallPref, pos, Quaternion.identity);
+        Photon.Pun.PhotonNetwork.InstantiateSceneObject(targetBallPrefID, pos, Quaternion.identity);
     }
 
 
