@@ -33,5 +33,7 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - ExecuteCommand
+  - SetPlayer
+  - SetStatus
   DisableAutoOpenWizard: 1
   ShowSettings: 1

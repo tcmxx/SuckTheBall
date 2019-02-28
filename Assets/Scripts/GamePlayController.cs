@@ -32,7 +32,23 @@ public class GamePlayController : MonoBehaviour,IPunObservable
         Deck = new AblityDeck();
         Deck.LoadDefaultAbilities();
 
-        PlayerIndex = PhotonNetwork.LocalPlayer.ActorNumber;
+        if (PhotonNetwork.InRoom)
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(PhotonNetwork.LocalPlayer.NickName))
+            {
+                PlayerIndex = (int)PhotonNetwork.CurrentRoom.CustomProperties[PhotonNetwork.LocalPlayer.NickName];
+            }
+            else
+            {
+                PlayerIndex = 0;
+            }
+
+        }
+        else
+        {
+            PlayerIndex = 0;
+        }
+        
     }
     
     // Start is called before the first frame update
@@ -123,14 +139,21 @@ public class GamePlayController : MonoBehaviour,IPunObservable
         if (stream.IsWriting)
         {
             // We own this player: send the others our data
-            stream.SendNext(Player0Info);
-            stream.SendNext(Player1Info);
+            stream.SendNext(Player0Info.score);
+            stream.SendNext(Player0Info.mana);
+            stream.SendNext(Player1Info.score);
+            stream.SendNext(Player1Info.mana);
         }
         else
         {
             // Network player, receive data
-            this.Player0Info = (PlayerInGameInfo)stream.ReceiveNext();
-            this.Player1Info = (PlayerInGameInfo)stream.ReceiveNext();
+            PlayerInGameInfo playerInfo = new PlayerInGameInfo();
+            playerInfo.score = (int)stream.ReceiveNext();
+            playerInfo.mana = (float)stream.ReceiveNext();
+            Player0Info = playerInfo;
+            playerInfo.score = (int)stream.ReceiveNext();
+            playerInfo.mana = (float)stream.ReceiveNext();
+            Player1Info = playerInfo;
         }
     }
 

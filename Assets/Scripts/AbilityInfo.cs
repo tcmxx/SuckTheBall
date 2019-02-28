@@ -16,11 +16,13 @@ public class AbilityInfo : ScriptableObject
     {
         AbilityCommand command = new AbilityCommand();
         command.abilityID = abilityID;
-        command.effectTime = PhotonNetwork.Time + effectDelay;
+        double delay = PhotonNetwork.IsMasterClient ? 0 : NetworkController.Instance.interpolationBackTime;
+        command.effectTime = PhotonNetwork.Time + effectDelay - delay;
         command.playerIndex = playerIndex;
-        command.position = position;
+        command.positionX = position.x;
+        command.positionY = position.y;
         command.rotation = rotation;
-        command.useTime = PhotonNetwork.Time;
+        command.useTime = PhotonNetwork.Time - delay;
         return command;
     }
 

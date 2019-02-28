@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using ExitGames.Client.Photon;
 
+
+[System.Serializable]
 public struct AbilityCommand
 {
     public int playerIndex;
@@ -10,7 +15,31 @@ public struct AbilityCommand
     public double useTime;
     public double effectTime;
     public float rotation;
-    public Vector2 position;
+    public float positionX;
+    public float positionY;
+    // Convert an object to a byte array
+    public static byte[] ObjectToByteArray(object obj)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        using (var ms = new MemoryStream())
+        {
+            bf.Serialize(ms, obj);
+            return ms.ToArray();
+        }
+    }
+
+    // Convert a byte array to an Object
+    public static object ByteArrayToObject(byte[] arrBytes)
+    {
+        using (var memStream = new MemoryStream())
+        {
+            var binForm = new BinaryFormatter();
+            memStream.Write(arrBytes, 0, arrBytes.Length);
+            memStream.Seek(0, SeekOrigin.Begin);
+            var obj = binForm.Deserialize(memStream);
+            return obj;
+        }
+    }
 }
 
 
@@ -27,6 +56,7 @@ public class CommandController : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
+        PhotonPeer.RegisterType(typeof(AbilityCommand), (byte)'C', AbilityCommand.ObjectToByteArray, AbilityCommand.ByteArrayToObject);
     }
 
     // Update is called once per frame
@@ -58,11 +88,11 @@ public class CommandController : MonoBehaviourPun
         if (gameDataRegister.AbilityRegister.TryGetValue(command.abilityID, out abilityInfo))
         {
             GamePlayController.Instance.CostPlayerMana(command.playerIndex, abilityInfo.manaCost);
-            GameObject temp = PhotonNetwork.Instantiate(abilityInfo.abilityPrefabID, command.position, Quaternion.Euler(0, 0, command.rotation));
+            GameObject temp = PhotonNetwork.InstantiateSceneObject(abilityInfo.abilityPrefabID, new Vector2(command.positionX,command.positionY), Quaternion.Euler(0, 0, command.rotation));
             AbilityObject abilityObj = temp.GetComponent<AbilityObject>();
 
-            abilityObj.SetPlayer(command.playerIndex);
-            abilityObj.SetStatus(AbilityObject.Status.Placed);
+            abilityObj.BroadcastSetPlayer(command.playerIndex);
+            abilityObj.BroadcastSetStatus(AbilityObject.Status.Placed);
             abilityObj.EffectTime = command.effectTime;
             
         }

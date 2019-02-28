@@ -6,6 +6,9 @@ using Photon.Realtime;
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
+    public double interpolationBackTime = 0.2;
+    public int sendRate = 40;
+    public int serializationRate = 40;
     public static NetworkController Instance { get; private set; }
 
     const string gameVersion = "0.0";
@@ -28,6 +31,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.OfflineMode = true;
         PhotonNetwork.AutomaticallySyncScene = true ;
+        PhotonNetwork.SendRate = sendRate;
+        PhotonNetwork.SerializationRate = serializationRate;
     }
 
     // Update is called once per frame
@@ -87,6 +92,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+        properties[PhotonNetwork.LocalPlayer.NickName] = 0;
+        properties[newPlayer.NickName] = 1;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(properties);  //for now save the nick name and there playerindex in room property
+
         PhotonNetwork.LoadLevel("GameScene");
     }
 }

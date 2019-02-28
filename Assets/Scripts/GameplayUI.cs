@@ -84,7 +84,7 @@ public class GameplayUI : MonoBehaviour
         float mana = GamePlayController.Instance.GetLocalPlayerInfo().mana;
         for (int i = 0; i < manaBarImages.Length; ++i)
         {
-            if(i < mana - 1)
+            if(i <= mana - 1)
             {
                 manaBarImages[i].fillAmount = 1;
             }else if(i == (int)mana)

@@ -43,3 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d389127ed91cf4fb00129f5e777ba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendRate: 20
+  serializationRate: 20

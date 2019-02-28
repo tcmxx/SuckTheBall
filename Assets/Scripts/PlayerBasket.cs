@@ -23,7 +23,8 @@ public class PlayerBasket : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(targetBallTag))
         {
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
+            Photon.Pun.PhotonNetwork.Destroy(collision.gameObject);
             GamePlayController.Instance.PlayerGetPoint(playerIndex);
         }
     }

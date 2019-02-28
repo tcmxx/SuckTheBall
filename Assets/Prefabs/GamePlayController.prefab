@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startDelay: 3
+  manaRegenRate: 1
   prefabPool: {fileID: 11400000, guid: f92132e0cb6b6444b8ee4fdd7dd0be9e, type: 2}
 --- !u!114 &7400112708512299214
 MonoBehaviour:
@@ -75,10 +76,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
+  - {fileID: 8004170897207184119}
   viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class AbilityObject : MonoBehaviour
+public class AbilityObject : MonoBehaviourPun
 {
 
     public GameObject visualGhostNotPlaceable;
@@ -37,11 +37,14 @@ public class AbilityObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(CurrentStatus == Status.Placed)
+        if (PhotonNetwork.IsMasterClient)
         {
-            if(PhotonNetwork.Time >= EffectTime)
+            if (CurrentStatus == Status.Placed)
             {
-                SetStatus(Status.Effected);
+                if (PhotonNetwork.Time >= EffectTime)
+                {
+                    BroadcastSetStatus(Status.Effected);
+                }
             }
         }
     }
@@ -52,6 +55,23 @@ public class AbilityObject : MonoBehaviour
     {
         return true;
     }
+
+    public void BroadcastSetStatus(Status status)
+    {
+        if (PhotonNetwork.OfflineMode)
+            SetStatus(status);
+        else
+            photonView.RPC("SetStatus", RpcTarget.All, status);
+    }
+
+    public void BroadcastSetPlayer(int index)
+    {
+        if (PhotonNetwork.OfflineMode)
+            SetPlayer(index);
+        else
+            photonView.RPC("SetPlayer", RpcTarget.All, index);
+    }
+    [PunRPC]
     public virtual void SetStatus(Status status)
     {
         CurrentStatus = status;
@@ -83,11 +103,10 @@ public class AbilityObject : MonoBehaviour
             visualPlaced.SetActive(false);
         }
     }
-
-
-
-    public virtual void SetPlayer(int index)
+    [PunRPC]
+    protected virtual void SetPlayer(int index)
     {
         playerIndex = index;
     }
+
 }
