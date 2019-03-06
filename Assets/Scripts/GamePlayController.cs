@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 
 public struct PlayerInGameInfo
 {
@@ -10,7 +11,7 @@ public struct PlayerInGameInfo
 }
 
 
-public class GamePlayController : MonoBehaviour,IPunObservable
+public class GamePlayController : MonoBehaviour, IPunObservable
 {
     public int PlayerIndex { get; private set; }
     public static GamePlayController Instance { get; protected set; }
@@ -32,7 +33,7 @@ public class GamePlayController : MonoBehaviour,IPunObservable
         Deck = new AblityDeck();
         Deck.LoadDefaultAbilities();
 
-        if (PhotonNetwork.InRoom)
+        /*if (PhotonNetwork.InRoom)
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(PhotonNetwork.LocalPlayer.NickName))
             {
@@ -47,10 +48,11 @@ public class GamePlayController : MonoBehaviour,IPunObservable
         else
         {
             PlayerIndex = 0;
-        }
-        
+        }*/
+        PlayerIndex = PhotonNetwork.LocalPlayer.GetPlayerNumber();
+        PlayerNumbering.OnPlayerNumberingChanged += () =>{ PlayerIndex = PhotonNetwork.LocalPlayer.GetPlayerNumber(); };
     }
-    
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
@@ -61,22 +63,19 @@ public class GamePlayController : MonoBehaviour,IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            float reg = Time.deltaTime * manaRegenRate;
-            var info = Player0Info;
-            info.mana = Mathf.Min(info.mana + reg,10);
-            Player0Info = info;
+        float reg = Time.deltaTime * manaRegenRate;
+        var info = Player0Info;
+        info.mana = Mathf.Min(info.mana + reg, 10);
+        Player0Info = info;
 
-            info = Player1Info;
-            info.mana = Mathf.Min(info.mana + reg, 10);
-            Player1Info = info;
-        }
+        info = Player1Info;
+        info.mana = Mathf.Min(info.mana + reg, 10);
+        Player1Info = info;
     }
 
     public PlayerInGameInfo GetLocalPlayerInfo()
     {
-        if(PlayerIndex == 0)
+        if (PlayerIndex == 0)
         {
             return Player0Info;
         }
@@ -120,7 +119,7 @@ public class GamePlayController : MonoBehaviour,IPunObservable
 
     public void PlayerGetPoint(int playerIndex)
     {
-        if(playerIndex == 0)
+        if (playerIndex == 0)
         {
             var temp = Player0Info;
             temp.score++;

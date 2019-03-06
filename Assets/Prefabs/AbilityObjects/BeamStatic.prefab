@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8775185723629801827}
   - component: {fileID: 7524877125007656956}
   - component: {fileID: 31062966387811388}
-  - component: {fileID: 4399159163241268318}
+  - component: {fileID: 6131856097405908347}
   m_Layer: 0
   m_Name: ObjectEffected
   m_TagString: Untagged
@@ -109,7 +109,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230603359}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -204,7 +204,7 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4399159163241268318
+--- !u!114 &6131856097405908347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,7 +224,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  abilityObjectRef: {fileID: 7230589893256258026}
+  abilityObjectRef: {fileID: 7859617619083511414}
 --- !u!1 &1564614348
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,9 +425,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5439298192066181816}
   - component: {fileID: 9119897185527759140}
-  - component: {fileID: 7230589893256258026}
+  - component: {fileID: 7859617619083511414}
   m_Layer: 0
-  m_Name: Beam
+  m_Name: BeamStatic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,7 +472,7 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &7230589893256258026
+--- !u!114 &7859617619083511414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

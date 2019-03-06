@@ -12,8 +12,10 @@ public class AbilityButton : MonoBehaviour
     [SerializeField]
     protected GameObject confirmButtonsRef;
     [SerializeField]
-    protected GameObject rotationButtonsRef;
+    protected Button confirmButtonRef;
     [SerializeField]
+    protected GameObject rotationButtonsRef;
+    
     protected CanvasGroup canvasGroup;
 
     [SerializeField]
@@ -96,6 +98,7 @@ public class AbilityButton : MonoBehaviour
         abilityMarker = AbilityInfo.InstantiateForLocalIndicator(Vector2.zero, 0).GetComponent<AbilityObject>();
         abilityMarker.gameObject.SetActive(false);
         abilityMarker.SetStatus(AbilityObject.Status.GhostPlaceable);
+        abilityMarker.SetPlayer(GamePlayController.Instance.PlayerIndex);
 
         iconRef.sprite = AbilityInfo.abilityButtonSprite;
         costRef.text = AbilityInfo.manaCost.ToString();
@@ -137,6 +140,12 @@ public class AbilityButton : MonoBehaviour
         trigger.enabled = usable;
     }
 
+    //set whether to enable the placing confirm button
+    protected void SetPlaceable(bool placeable)
+    {
+        confirmButtonRef.interactable = placeable;
+    }
+
     #region drag listeners
 
     public void OnBeginDrag(BaseEventData eventData)
@@ -176,6 +185,8 @@ public class AbilityButton : MonoBehaviour
             var worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
             worldPos.z = 0;
             abilityMarker.transform.position = worldPos;
+
+            SetPlaceable(abilityMarker.CheckPlaceable());
             if (GameplayUI.Instance.IsInsideAbilityPanel(eventData.position))
             {
                 TransPlacingToMoving();
@@ -201,7 +212,7 @@ public class AbilityButton : MonoBehaviour
         status = Status.Placing;
         graphicsRef.SetActive(false);
         imageRef.color = new Color(1, 1, 1, 0);
-        confirmButtonsRef.SetActive(false);
+        confirmButtonsRef.SetActive(true);
         abilityMarker.gameObject.SetActive(true);
 
         //also update the positoin of the marker object
@@ -223,12 +234,14 @@ public class AbilityButton : MonoBehaviour
     {
         status = Status.Moving;
         GameplayUI.Instance.SetOtherButtonsForceUnusable(this, true);
+        abilityMarker.ShowPlacingArea(true);
     }
     protected void TransMovingToDefault()
     {
         status = Status.Default;
         transform.localPosition = Vector3.zero;
         GameplayUI.Instance.SetOtherButtonsForceUnusable(this, false);
+        abilityMarker.ShowPlacingArea(false);
     }
 
     protected void TransPlacingToPlaced()
@@ -241,7 +254,7 @@ public class AbilityButton : MonoBehaviour
     protected void TransPlacedToPlacing()
     {
         status = Status.Placing;
-        confirmButtonsRef.SetActive(false);
+        confirmButtonsRef.SetActive(true);
         rotationButtonsRef.SetActive(false);
     }
 
@@ -255,6 +268,7 @@ public class AbilityButton : MonoBehaviour
         imageRef.color = new Color(1, 1, 1, 1);
         abilityMarker.gameObject.SetActive(false);
         GameplayUI.Instance.SetOtherButtonsForceUnusable(this, false);
+        abilityMarker.ShowPlacingArea(false);
     }
 
     public void TransPlacedToRotating()
@@ -272,6 +286,7 @@ public class AbilityButton : MonoBehaviour
     //called when the confirm button is clicked.
     public void OnConfirmed()
     {
+        abilityMarker.ShowPlacingArea(false);
         var command = AbilityInfo.GenerateCommand(abilityMarker.transform.position, abilityMarker.transform.rotation.eulerAngles.z, GamePlayController.Instance.PlayerIndex);
         CommandController.Instance.BroadcastCommand(command);
         AbilityInfo.DestroyLocalIndicator(abilityMarker.gameObject);
@@ -280,6 +295,7 @@ public class AbilityButton : MonoBehaviour
         GameplayUI.Instance.OnAbilityUsed(this);
     }
 
+    #region rotation related
 
     protected void SetupRotationCallbacked(GameObject rotationButton)
     {
@@ -332,4 +348,6 @@ public class AbilityButton : MonoBehaviour
             TransRotatingToPlaced();
         }
     }
+
+    #endregion
 }

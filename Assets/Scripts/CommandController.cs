@@ -13,7 +13,7 @@ public struct AbilityCommand
     public int playerIndex;
     public string abilityID;
     public double useTime;
-    public double effectTime;
+    //public double effectTime;
     public float rotation;
     public float positionX;
     public float positionY;
@@ -93,8 +93,8 @@ public class CommandController : MonoBehaviourPun
 
             abilityObj.BroadcastSetPlayer(command.playerIndex);
             abilityObj.BroadcastSetStatus(AbilityObject.Status.Placed);
-            abilityObj.EffectTime = command.effectTime;
-            
+            abilityObj.EffectTime = command.useTime + abilityInfo.effectDelay;
+            abilityObj.DestroyTime = abilityObj.EffectTime + abilityInfo.maxLifetime;
         }
         else
         {

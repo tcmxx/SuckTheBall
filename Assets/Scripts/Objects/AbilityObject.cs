@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Events;
 
 public class AbilityObject : MonoBehaviourPun
 {
@@ -10,16 +11,19 @@ public class AbilityObject : MonoBehaviourPun
     public GameObject visualGhostPlaceable;
     public GameObject visualPlaced;
     public GameObject effectedGameObject;
+    public PlacingAreaCheck placingCheck;
+
+    public UnityEvent onDestroy;
 
     public Status CurrentStatus { get { return mStatus; } protected set { mStatus = value; } }
     [SerializeField]
     protected Status mStatus = Status.GhostNotPlaceable;
 
     public double EffectTime { get;  set; }
+    public double DestroyTime { get; set; }
     protected int playerIndex;
     protected int PlayerIndex { get { return playerIndex; } }
-
-
+    
     public enum Status
     {
         GhostNotPlaceable,
@@ -28,14 +32,9 @@ public class AbilityObject : MonoBehaviourPun
         Effected
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -45,15 +44,23 @@ public class AbilityObject : MonoBehaviourPun
                 {
                     BroadcastSetStatus(Status.Effected);
                 }
+
+                if (PhotonNetwork.Time >= DestroyTime)
+                {
+                    NetworkDestroy();
+                }
             }
         }
     }
 
 
-
     public virtual bool CheckPlaceable()
     {
-        return true;
+        return placingCheck.CheckPlaceable(transform.position, transform.rotation.eulerAngles.z);
+    }
+    public void ShowPlacingArea(bool show)
+    {
+        placingCheck.VisualizeArea(show);
     }
 
     public void BroadcastSetStatus(Status status)
@@ -104,9 +111,19 @@ public class AbilityObject : MonoBehaviourPun
         }
     }
     [PunRPC]
-    protected virtual void SetPlayer(int index)
+    public virtual void SetPlayer(int index)
     {
         playerIndex = index;
+        var colors = GetComponentsInChildren<PlayerColorSetter>(true);
+        foreach(var c in colors)
+        {
+            c.SetColorPlayer(PlayerIndex);
+        }
     }
 
+    public void NetworkDestroy()
+    {
+        onDestroy.Invoke();
+        PhotonNetwork.Destroy(gameObject);  //for now just destroy it directly using photon. Probably should delay the client's destroy
+    }
 }

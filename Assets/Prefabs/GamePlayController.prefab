@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8004170897207184119}
   - component: {fileID: 7400112708512299214}
   - component: {fileID: 7400112708512299215}
+  - component: {fileID: 2909993409663393579}
   m_Layer: 0
   m_Name: GamePlayController
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0
+--- !u!114 &2909993409663393579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7400112710430013072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b28dd60f6abf16d4094cf0f642a043e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0

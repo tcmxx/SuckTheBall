@@ -9,15 +9,15 @@ public class AbilityInfo : ScriptableObject
     public Sprite abilityButtonSprite;
     public int manaCost;
     public float effectDelay = 1;
+    public float maxLifetime = 999;
     public bool allowRotation = true;
     public string abilityPrefabID;
-
     public AbilityCommand GenerateCommand(Vector2 position, float rotation, int playerIndex)
     {
         AbilityCommand command = new AbilityCommand();
         command.abilityID = abilityID;
         double delay = PhotonNetwork.IsMasterClient ? 0 : NetworkController.Instance.interpolationBackTime;
-        command.effectTime = PhotonNetwork.Time + effectDelay - delay;
+        //command.effectTime = PhotonNetwork.Time + effectDelay - delay;
         command.playerIndex = playerIndex;
         command.positionX = position.x;
         command.positionY = position.y;
