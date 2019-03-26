@@ -18,15 +18,15 @@ public class AblityDeck
     public void LoadDefaultAbilities()
     {
         abilities.Add("Beam");
-        abilities.Add("Beam2");
+        abilities.Add("BeamStatic");
         abilities.Add("Beam");
-        abilities.Add("Beam2");
+        abilities.Add("BeamStatic");
         abilities.Add("Beam");
-        abilities.Add("Beam2");
+        abilities.Add("BeamStatic");
         abilities.Add("Beam");
-        abilities.Add("Beam2");
+        abilities.Add("BeamStatic");
         abilities.Add("Beam");
-        abilities.Add("Beam2");
+        abilities.Add("BeamStatic");
     }
 
     public virtual string Next()
